@@ -8,12 +8,21 @@ const url = `mongodb://${host}:${port}/`;
 class DBClient {
   constructor() {
     this.db = null;
-    MongoClient.connect(url, { useUnifiedTopology: true }, (error, client) => {
-      if (error) console.log(error);
-      this.db = client.db(database);
-      this.db.createCollection('users');
-      this.db.createCollection('files');
-    });
+    this.client = null;
+
+    this.connect();
+  }
+
+  async connect() {
+    try {
+      this.client = await MongoClient.connect(url, { useUnifiedTopology: true });
+      this.db = this.client.db(database);
+      await this.db.createCollection('users');
+      await this.db.createCollection('files');
+      console.log('Connected to MongoDB');
+    } catch (error) {
+      console.error('MongoDB Connection Error:', error);
+    }
   }
 
   isAlive() {
@@ -21,10 +30,16 @@ class DBClient {
   }
 
   async nbUsers() {
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
     return this.db.collection('users').countDocuments();
   }
 
   async getUser(query) {
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
     console.log('QUERY IN DB.JS', query);
     const user = await this.db.collection('users').findOne(query);
     console.log('GET USER IN DB.JS', user);
@@ -32,6 +47,9 @@ class DBClient {
   }
 
   async nbFiles() {
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
     return this.db.collection('files').countDocuments();
   }
 }
