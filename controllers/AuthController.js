@@ -23,7 +23,7 @@ const getConnect = async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
     const token = uuidv4();
-    const result = await redisClient.set(`auth_${token}`, user._id.toString(), 'EX', 86400);
+    await redisClient.set(`auth_${token}`, user._id.toString(), 'EX', 86400);
 
     return res.status(200).json({ token });
   } catch (error) {

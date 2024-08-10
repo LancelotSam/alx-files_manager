@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { MongoClient, ObjectId } from 'mongodb';
 
 const host = process.env.DB_HOST || 'localhost';
@@ -87,4 +88,4 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
-export default dbClient;
+export { dbClient, ObjectId };
