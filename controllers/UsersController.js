@@ -27,7 +27,7 @@ const postNew = async (req, res) => {
 
     return res.status(201).json({ id: result.insertedId, email });
   } catch (error) {
-	  console.error('Error creating user:' , error);
+	  console.error('Error creating user:', error);
     if (error.code === 11000) {
       return res.status(400).json({ error: 'Already exist' });
     }
